@@ -96,28 +96,6 @@ def resultData(size, data)
   data<<xor_result
 
   return data
-
-  # and_result = true 
-  # or_result = false
-  # xor_result = false
-
-  # if data.include? false
-  #   and_result = false
-  # end
-
-  # if data.include? true
-  #   or_result = true
-  # end
-
-  # if data.count(true) % 2 == 1
-  #   xor_result = true
-  # end
-
-  # data<<and_result
-  # data<<or_result
-  # data<<xor_result
-
-  # return data
 end
 
 def rowData(t, f, size)
@@ -150,30 +128,39 @@ end
 def getSymbols(pts, pfs, ps)
 
   array = ["t","T","F","f","0","1","2","3","4","5","6","7","8","9"]
-
-  if pts == ""
-    ts = "T"
-  elsif array.include? pts
-    ts = pts
-  else
+  trueParams = ["t","T","1","2","4","6","8"]
+  falseParams = ["f","F","0","3","5","7","9"]
+  if trueParams.include?(pts) && trueParams.include?(pfs) || falseParams.include?(pts) && falseParams.include?(pfs)
     ts = nil
-  end
-
-  if pfs == ""
-    fs = "F"
-  elsif array.include? pfs
-    fs = pfs
-  else
     fs = nil
+    s = nil
+  else
+      if pts == ""
+        ts = "T"
+      elsif array.include? pts
+        ts = pts
+      else
+        ts = nil
+      end
+
+      if pfs == ""
+        fs = "F"
+      elsif array.include? pfs
+        fs = pfs
+      else
+        fs = nil
+      end
+
+      if ps == ""
+        s = "3"
+      elsif array.include? ps
+        s = ps
+      else
+        s = nil
+      end
   end
 
-  if ps == ""
-    s = "3"
-  elsif array.include? ps
-    s = ps
-  else
-    s = nil
-  end
+
 
   return ts, fs, s
 
@@ -211,12 +198,11 @@ get '/' do
 end
 
 
-
 get '/error' do
   erb :error
 end
 
 not_found do
   status 404
-  erb :error
+  erb :notfound
 end
