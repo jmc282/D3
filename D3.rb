@@ -1,16 +1,6 @@
 require 'sinatra'
 require 'sinatra/reloader'
 
-
-def determine_msg(ts, fs, s)
-    return "ts:#{ts}, fs:#{fs}, s:#{s}"
-  # end
-end
-
-def valid_args?(ts, fs, s)
-   return (ts != fs) && s.to_i > 2 
-end
-
 def getHeading(size)
   toReturn = "<table><tr>"
   num = size-1
@@ -30,6 +20,7 @@ def getRows(t, f, size)
 
   array = rowData(t, f, size)
   array = revert(t, f, array.flatten)
+
 
   numRows.times do
     rows << "<tr>"
@@ -54,7 +45,6 @@ def revert(t, f, array)
   end
   toReturn 
 end
-
 
 def convert(symbol)
   if symbol == "t" || symbol == "T" || symbol == "1" || symbol == 1
@@ -152,7 +142,42 @@ def createTable(t, f, size)
 
 end
 
+def valid_params?(ts, fs, s)
+  return (ts != fs) && s.to_i >= 2 
+end
+
 # If a GET request comes in at /, do the following.
+def getSymbols(pts, pfs, ps)
+
+  array = ["t","T","F","f","0","1","2","3","4","5","6","7","8","9"]
+
+  if pts == ""
+    ts = "T"
+  elsif array.include? pts
+    ts = pts
+  else
+    ts = nil
+  end
+
+  if pfs == ""
+    fs = "F"
+  elsif array.include? pfs
+    fs = pfs
+  else
+    fs = nil
+  end
+
+  if ps == ""
+    s = "3"
+  elsif array.include? ps
+    s = ps
+  else
+    s = nil
+  end
+
+  return ts, fs, s
+
+end
 
 get '/' do
   # Get the parameters
@@ -161,20 +186,31 @@ get '/' do
   ps = params['s']
 
   valid = false
-  table = "null table"
-  # Setting these variables here so that they are accessible
-  # outside the conditional
+  table = ""
 
-  valid = valid_args? pts, pfs, ps
-  
-  if valid
-    table = createTable pts, pfs, ps.to_i
-  end 
-      
+  # if all fields are nil, no data entered yet and submit button not pressed
+  if pts.nil? && pfs.nil? && ps.nil?
+    show = true
+  else # if the button was pressed
+    show = false
 
+    ts, fs, s = getSymbols(pts, pfs, ps)
+    if ts == nil || fs == nil || s == nil
+      redirect '/error'
+    end
+
+    valid = valid_params? ts, fs, s.to_i
   
-  erb :index, :locals => { valid: valid, table:table}
+    if valid
+      table = createTable ts, fs, s.to_i
+    else
+      redirect '/error'
+    end 
+  end
+  erb :index, :locals => { valid: valid, table:table, show:show}
 end
+
+
 
 get '/error' do
   erb :error

@@ -2,8 +2,8 @@
   <head></head>
   <body>
 
-    
-      <% unless valid %>
+    <% if show %>
+
         <form>
           True Symbol:<input type='text' name='ts' /><br>
           False Symbol:<input type='text' name='fs' /><br>
@@ -11,7 +11,11 @@
           <input type='submit' value='Show truth table' />
         </form>
         <a href="/">Reload Page</a>
-      <% else %>
+
+    <% else %>
+
+
+      <% if valid %>
         <p>
 
           <p>
@@ -20,6 +24,8 @@
           <br/><a href="/">Back to main page</a>
         <p>
       <% end %>
+
+    <% end %>
 
 
   </body>
