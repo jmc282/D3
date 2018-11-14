@@ -1,16 +1,15 @@
 <html>
   <head></head>
   <body>
-
     <% if show %>
 
         <form>
           True Symbol:<input type='text' name='ts' /><br>
           False Symbol:<input type='text' name='fs' /><br>
           Size (2^x):<input type='text' name='s' /><br>
-          <input type='submit' value='Show truth table' />
+          <input type='submit' name ='submit' value='Show truth table' />
         </form>
-        <a href="/">Reload Page</a>
+        <a name='link-back' href="/">Reload Page</a>
 
     <% else %>
 
@@ -20,7 +19,7 @@
           <p>
             <%= table %>
           <p>
-          <br/><a href="/">Back to main page</a>
+          <br/><a name='table-link-back' href="/">Back to main page</a>
         <p>
       <% end %>
 
